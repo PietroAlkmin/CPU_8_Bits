@@ -18,8 +18,8 @@ A CPU processa instruções em 8 bits e é dividida nos seguintes blocos princip
 - **Unidade de Controle (UC):** Coração da CPU responsável por orquestrar os ciclos de máquina.
   - **Ciclo de Busca (Fetch):** Lê programaticamente a próxima instrução da memória ROM.
   - **Ciclo de Execução:** Decodifica a instrução (Palavra de Comando / Opcode) e aciona a ALU para realizar o cálculo correspondente com o próximo operando (N).
-- **Memória e Endereçamento:** A memória armazena tanto as instruções (Opcodes) quanto os operandos (N). O endereçamento projetado dispensa uso explícito por parte do usuário, sendo operado de forma **sequencial (pilha)** — o próximo operando está sempre localizado no endereço imediatamente após a instrução.
-- **ALU (Unidade Lógica e Aritmética):** Módulo matemático rigoroso composto por um Seletor de Operações (Multiplexador) e Circuitos complexos de processamento em cascata.
+- **Memória e Endereçamento:** A memória armazena tanto as instruções (Opcodes) quanto os operandos (N). O endereçamento projetado dispensa uso explícito por parte do usuário, sendo operado de forma **sequencial (pilha)**, o próximo operando está sempre localizado no endereço imediatamente após a instrução.
+- **ALU (Unidade Lógica e Aritmética):** Módulo matemático composto por um Seletor de Operações (Multiplexador) e Circuitos complexos de processamento em cascata.
 - **Registradores Internos:**
   - **AC (Acumulador):** Registrador principal de 8 bits. Atua rotineiramente como o primeiro operando da ALU e armazena os resultados primários (como o LSB das multiplicações e o Resto das divisões).
   - **MQ (Multiplier/Quotient):** Registrador auxiliar de 8 bits utilizado unicamente para armazenar transbordos extensos (o MSB das multiplicações e o Quociente das divisões).
@@ -44,7 +44,6 @@ A CPU consegue decodificar e processar palavras de comando para executar as segu
 O circuito da CPU coroa o entendimento sobre o Datapath e ciclos de relógio:
 * **Decodificação e Ciclos:** O desenvolvimento do **Circuito de Controle** introduziu a complexidade de sincronizar o *Program Counter (PC)* para realizar o Fetch correto. Garantir que a ROM forneça o Opcode em um ciclo, e no ciclo seguinte avance sequencialmente para fornecer o dado `N` correto para a entrada da ALU sem corromper as flag operations foi um grande avanço no design.
 * **Divisão por Restauração (ALU):** Manteve-se o êxito no módulo da ALU em resolver multiplicações e divisões de forma nativa. A criação da lógica de restauração da célula de divisão, utilizando o sinal de `Cout` do subtrator diretamente como o seletor do Multiplexador para "restaurar" o valor positivo, reitera a precisão de um projeto bem resolvido na base de silício virtual.
-* **Gerenciamento do Split de Barramento:** O desafio final arquitetural foi sincronizar o write enable dos registradores **AC** e **MQ** de acordo com a operação sendo executada durante o sinal de clock, isolando o barramento estendido (16 bits) e preservando MSBs e LSBs de forma idônea perante transbordamentos de multiplicação.
 
 ## Como Executar o Projeto
 
