@@ -1,9 +1,9 @@
-# CPU de 8-bits com Arquitetura de Von Neumann
+# CPU de 8-bits com Arquitetura SAP Simplificada
 
 Este repositório contém o projeto completo de uma **CPU (Unidade Central de Processamento) de 8 bits**, desenvolvida como atividade ponderada para simulação de circuitos digitais. O projeto foi implementado utilizando o software de simulação [Digital (hneemann)](https://github.com/hneemann/Digital).
 
 ## Resumo do Projeto
-O presente projeto consiste no desenvolvimento de um processador simplificado, inspirado nos preceitos fundamentais da **Arquitetura de Von Neumann**. A CPU é composta por uma Unidade Lógica e Aritmética (ALU) totalmente funcional, Memória (para armazenar instruções e operandos) e um Circuito de Controle capaz de gerenciar ativamente os ciclos de busca (Fetch) e execução. O sistema se destaca por realizar o endereçamento sequencial em forma de pilha (onde o operando é buscado no endereço subsequente ao Opcode) e pela construção hierárquica baseada em componentes lógicos básicos, evitando macros genéricas não-relacionais.
+O presente projeto consiste no desenvolvimento de um processador simplificado, inspirado nos preceitos fundamentais da **Arquitetura SAP (Simple-As-Possible)**. A CPU é composta por uma Unidade Lógica e Aritmética (ALU) totalmente funcional, Memória (para armazenar instruções e operandos) e um Circuito de Controle capaz de gerenciar ativamente os ciclos de busca (Fetch) e execução. O sistema se destaca por realizar o endereçamento sequencial em forma de pilha (onde o operando é buscado no endereço subsequente ao Opcode) e pela construção hierárquica baseada em componentes lógicos básicos, evitando macros genéricas não-relacionais.
 
 ## Vídeo de Apresentação
 
@@ -66,5 +66,5 @@ O circuito da CPU coroa o entendimento sobre o Datapath e ciclos de relógio:
 
 - **Nome:** Pietro Alkmin
 - **Instituição:** Inteli
-- **Projeto:** CPU Arquitetura Simplificada 8 bits (Von Neumann)
+- **Projeto:** CPU de 8 bits (Arquitetura SAP Simplificada)
 - **Repositório:** [PietroAlkmin/CPU_8_Bits](https://github.com/PietroAlkmin/CPU_8_Bits)
