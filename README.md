@@ -7,11 +7,9 @@ O presente projeto consiste no desenvolvimento de um processador simplificado, i
 
 ## Vídeo de Apresentação
 
-[![Vídeo de Demonstração](https://img.youtube.com/vi/LbK_SP19gcc/0.jpg)](https://youtu.be/LbK_SP19gcc)
+[![Vídeo de Demonstração](https://img.youtube.com/vi/NSjUSaYEE7M/0.jpg)](https://youtu.be/NSjUSaYEE7M)
 
 *Clique na imagem acima para assistir à explicação geral, o caminho dos dados (datapath) e a demonstração do funcionamento da CPU em ciclo de execução.*
-
-**(Nota: se houver um novo vídeo para a CPU, substitua o link acima)**
 
 ## Arquitetura e Componentes
 
