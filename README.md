@@ -1,67 +1,70 @@
-# ULA Digital de 8-bits (ALU)
+# CPU de 8-bits com Arquitetura de Von Neumann
 
-Este repositório contém o projeto de uma **Unidade Lógica e Aritmética (ALU) de 8 bits**, desenvolvida como atividade ponderada para simulação de circuitos digitais. O projeto foi implementado utilizando o software de simulação [Digital (hneemann)](https://github.com/hneemann/Digital).
+Este repositório contém o projeto completo de uma **CPU (Unidade Central de Processamento) de 8 bits**, desenvolvida como atividade ponderada para simulação de circuitos digitais. O projeto foi implementado utilizando o software de simulação [Digital (hneemann)](https://github.com/hneemann/Digital).
 
 ## Resumo do Projeto
-O presente projeto consiste no desenvolvimento do núcleo de processamento de um computador, inspirado nos preceitos fundamentais da **Arquitetura de Von Neumann**. Tratando-se de uma ULA totalmente funcional, a implementação não recorre primariamente a macros pré-fabricadas abstratas (blocos de alto nível), mas constrói a sua base relacional utilizando uma hierarquia de portas lógicas e somadores de 1 bit. O projeto demonstra um avanço profundo no entendimento de operações de máquina por hardware, resolvendo através de componentes físicos cálculos complexos como a multiplicação e a divisão não-restauradora de forma nativa. 
+O presente projeto consiste no desenvolvimento de um processador simplificado, inspirado nos preceitos fundamentais da **Arquitetura de Von Neumann**. A CPU é composta por uma Unidade Lógica e Aritmética (ALU) totalmente funcional, Memória (para armazenar instruções e operandos) e um Circuito de Controle capaz de gerenciar ativamente os ciclos de busca (Fetch) e execução. O sistema se destaca por realizar o endereçamento sequencial em forma de pilha (onde o operando é buscado no endereço subsequente ao Opcode) e pela construção hierárquica baseada em componentes lógicos básicos, evitando macros genéricas não-relacionais.
 
 ## Vídeo de Apresentação
 
 [![Vídeo de Demonstração](https://img.youtube.com/vi/LbK_SP19gcc/0.jpg)](https://youtu.be/LbK_SP19gcc)
 
-*Clique na imagem acima para assistir à explicação e demonstração do funcionamento da ULA.*
+*Clique na imagem acima para assistir à explicação geral, o caminho dos dados (datapath) e a demonstração do funcionamento da CPU em ciclo de execução.*
 
-**Link alternativo (Google Drive):** [Clique aqui para acessar o vídeo reserva](https://drive.google.com/file/d/1SOdocvwvXYWiwySvpyd6bPQsugavxBam/view?usp=sharing)
+**(Nota: se houver um novo vídeo para a CPU, substitua o link acima)**
 
 ## Arquitetura e Componentes
 
-A ULA foi projetada para processar dados de 8 bits e é composta pelos seguintes componentes principais:
+A CPU processa instruções em 8 bits e é dividida nos seguintes blocos principais:
 
-- **Circuitos de Operações:** Módulos lógicos isolados responsáveis por executar cada cálculo aritmético e lógico de forma hierárquica.
-- **Seletor de Operações (Multiplexador):** Circuito que recebe um código de instrução (Opcode) de 3 bits e direciona o resultado da operação correta para a saída.
+- **Unidade de Controle (UC):** Coração da CPU responsável por orquestrar os ciclos de máquina.
+  - **Ciclo de Busca (Fetch):** Lê programaticamente a próxima instrução da memória ROM.
+  - **Ciclo de Execução:** Decodifica a instrução (Palavra de Comando / Opcode) e aciona a ALU para realizar o cálculo correspondente com o próximo operando (N).
+- **Memória e Endereçamento:** A memória armazena tanto as instruções (Opcodes) quanto os operandos (N). O endereçamento projetado dispensa uso explícito por parte do usuário, sendo operado de forma **sequencial (pilha)** — o próximo operando está sempre localizado no endereço imediatamente após a instrução.
+- **ALU (Unidade Lógica e Aritmética):** Módulo matemático rigoroso composto por um Seletor de Operações (Multiplexador) e Circuitos complexos de processamento em cascata.
 - **Registradores Internos:**
-  - **AC (Acumulador):** Registrador principal de 8 bits, atua como um dos operandos e armazena os resultados primários (como o LSB da multiplicação e o Resto da divisão).
-  - **MQ (Multiplier/Quotient):** Registrador auxiliar de 8 bits utilizado para armazenar operandos extensos (como o MSB da multiplicação e o Quociente da divisão).
+  - **AC (Acumulador):** Registrador principal de 8 bits. Atua rotineiramente como o primeiro operando da ALU e armazena os resultados primários (como o LSB das multiplicações e o Resto das divisões).
+  - **MQ (Multiplier/Quotient):** Registrador auxiliar de 8 bits utilizado unicamente para armazenar transbordos extensos (o MSB das multiplicações e o Quociente das divisões).
 
-## Tabela de Operações
+## Tabela de Operações (ALU)
 
-A Unidade é capaz de realizar as seguintes operações matemáticas e lógicas, selecionadas a partir de um seletor (Opcode) de 3 bits:
+A CPU consegue decodificar e processar palavras de comando para executar as seguintes operações matemáticas e lógicas, acionando o Acumulador e a Entrada N (vinda sequencialmente da Memória):
 
-| Opcode (Binário) | Operação | Descrição Técnica |
-| :---: | :--- | :--- |
-| **000** | **SOMA** | Adição de 8 bits (A + N) |
-| **001** | **SUBTR** | Subtração via Complemento de 2 (A - N) |
-| **010** | **MULT** | Multiplicação 8x8 (Resultado 16 bits: LSB no AC, MSB no MQ) |
-| **011** | **DIV** | Divisão por Restauração (Quociente no MQ, Resto no AC) |
-| **100** | **NAND** | Operação Lógica Universal (Bit a Bit) |
-| **101** | **XOR** | Operação Lógica de Ou Exclusivo (Bit a Bit) |
-| **110** | **SLL** | Shift Left Logical (Deslocamento de bits para esquerda) |
-| **111** | **SRL** | Shift Right Logical (Deslocamento de bits para direita) |
+| Opcode | Operação | Matemática | Saídas e Registradores (Destino) |
+| :---: | :--- | :--- | :--- |
+| **000** | **SOMA** | AC + N | AC recebe o resultado (8 bits) |
+| **001** | **SUBTR** | AC - N | AC recebe o resultado lícito via Comp. de 2 |
+| **010** | **MULT** | AC * N | LSB armazenado no AC; MSB armazenado no MQ |
+| **011** | **DIV** | AC / N | Resto permanece no AC; Quociente armazenado no MQ |
+| **100** | **NAND** | AC NAND N | AC recebe saída lógica bit a bit |
+| **101** | **XOR** | AC XOR N | AC recebe saída lógica bit a bit |
+| **110** | **SLL** | AC << N | AC recebe resultado (Shift Left Logical) |
+| **111** | **SRL** | AC >> N | AC recebe resultado (Shift Right Logical) |
 
 ## Processo de Desenvolvimento
 
-O circuito foi desenvolvido valorizando a construção manual e a hierarquia lógica:
-* **Implementação Modular:** A lógica não se limitou a blocos prontos de alto nível do software. A soma e a subtração, por exemplo, foram elaboradas utilizando somadores de completudade (Full-Adders) de 1 bit ligados em cascata.
-* **O Maior Desafio (Divisão por Restauração):** A operação de divisão foi um dos pontos mais complexos, exigindo a criação de uma sub-célula dedicada (`celula_div.dig`). Foi projetada a lógica de restauração, onde o sinal de `Cout` do subtrator atua ativamente como o seletor de um Multiplexador. Caso a subtração resulte em um valor negativo, o MUX entra em ação e "restaura" o valor original, garantindo a exatidão do cálculo de resto e quociente.
-* **Gerenciamento de Barramento:** Outro desafio de arquitetura foi o gerenciamento rígido do barramento de 16 bits resultante da multiplicação, fazendo o split correto para garantir que o **Acumulador (AC)** ficasse responsável pela parte baixa (LSB) e o **MQ** acomodasse a parte alta (MSB), preservando o valor e evitando qualquer overflow indesejado.
+O circuito da CPU coroa o entendimento sobre o Datapath e ciclos de relógio:
+* **Decodificação e Ciclos:** O desenvolvimento do **Circuito de Controle** introduziu a complexidade de sincronizar o *Program Counter (PC)* para realizar o Fetch correto. Garantir que a ROM forneça o Opcode em um ciclo, e no ciclo seguinte avance sequencialmente para fornecer o dado `N` correto para a entrada da ALU sem corromper as flag operations foi um grande avanço no design.
+* **Divisão por Restauração (ALU):** Manteve-se o êxito no módulo da ALU em resolver multiplicações e divisões de forma nativa. A criação da lógica de restauração da célula de divisão, utilizando o sinal de `Cout` do subtrator diretamente como o seletor do Multiplexador para "restaurar" o valor positivo, reitera a precisão de um projeto bem resolvido na base de silício virtual.
+* **Gerenciamento do Split de Barramento:** O desafio final arquitetural foi sincronizar o write enable dos registradores **AC** e **MQ** de acordo com a operação sendo executada durante o sinal de clock, isolando o barramento estendido (16 bits) e preservando MSBs e LSBs de forma idônea perante transbordamentos de multiplicação.
 
 ## Como Executar o Projeto
 
 1. **Pré-requisitos:** 
-   - Ter o Java instalado na máquina.
-   - Baixar o simulador lógico [Digital (hneemann)](https://github.com/hneemann/Digital/releases).
+   - Baixar o simulador lógico [Digital (hneemann)](https://github.com/hneemann/Digital/releases) e possuir o Java instalado.
 2. **Clonar o Repositório:**
    ```bash
-   git clone https://github.com/PietroAlkmin/ULA-Digital.git
+   git clone https://github.com/PietroAlkmin/CPU_8_Bits.git
    ```
 3. **Execução:**
    - Abra o simulador `Digital`.
-   - Vá em `File > Open` e abra o arquivo principal **`ALU.dig`** localizado na pasta `ArquivosDigital` (certifique-se de que de baixar a pasta completa, pois os arquivos auxiliares como `celula_div.dig`, `Subtrator.dig`, `Divisor.dig`, e os outros módulos dependem da mesma pasta para evitar erros).
-   - Inicie a simulação (botão play), configure os valores das entradas de dados e altere os 3 pinos de Opcode para testar todas as funcionalidades descritas na tabela.
+   - Vá em `File > Open` e navegue até a pasta `ArquivosDigital`. Abra o arquivo principal contendo o circuito mestre da **CPU**.
+   - (Atenção: Extraia e mantenha toda a hierarquia de arquivos (`ALU.dig`, `Divisor.dig`, e etc) dentro da mesma pasta para que os submódulos da CPU compilem com sucesso).
+   - Manipule o gerador de Clock para avançar os ciclos de Busca (Fetch) e Execução. Observe no split visual como a memória despeja dados alternando entre comando lógico na UC e operando material na ALU.
 
 ## Identificação e Autoria
 
 - **Nome:** Pietro Alkmin
 - **Instituição:** Inteli
-- **Projeto:** Unidade Lógica e Aritmética (ULA) de 8 bits
-- **Repositório:** [PietroAlkmin/ULA-Digital](https://github.com/PietroAlkmin/ULA-Digital)
+- **Projeto:** CPU Arquitetura Simplificada 8 bits (Von Neumann)
+- **Repositório:** [PietroAlkmin/CPU_8_Bits](https://github.com/PietroAlkmin/CPU_8_Bits)
